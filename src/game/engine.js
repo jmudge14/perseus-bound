@@ -218,11 +218,15 @@ function spawnEnemy(s, reason) {
 function placeUnknown(s) {
   const c = rollCoord(s);
   if (!c) return null;
-  const value = d6();
+  const rolled = d6();
+  // Challenge: planets are one value lower (1 stays 1). As with the physical dice, the die is lowered
+  // before it's placed, so the board always shows the real value.
+  const value = s.difficulty === 'challenge' ? Math.max(1, rolled - 1) : rolled;
   const p = { id: s.nextId++, x: c.x, y: c.y, type: 'unknown', value };
   s.planets.push(p);
-  addRoll(s, 'Planet', [['black', c.x], ['white', c.y], ['yellow', value]], [
-    { text: `Unexplored planet at (${c.x},${c.y}), value ${value}`, c: 'unknown' },
+  const lowered = value !== rolled ? ` (rolled ${rolled}, −1 for Challenge)` : '';
+  addRoll(s, 'Planet', [['black', c.x], ['white', c.y], ['yellow', rolled]], [
+    { text: `Unexplored planet at (${c.x},${c.y}), value ${value}${lowered}`, c: 'unknown' },
   ]);
   return p;
 }
@@ -711,7 +715,7 @@ const handlers = {
     const r = d6();
     markStep(s, 'contact', 'done', r <= 2 ? 'Hostile' : 'Friendly');
     addRoll(s, 'First contact', [['d6', r]], [r <= 2 ? { text: 'Hostile', c: 'hostile' } : { text: 'Friendly', c: 'friendly' }]);
-    const value = s.difficulty === 'challenge' ? Math.max(1, p.value - 1) : p.value;
+    const value = p.value; // Challenge's -1 was already applied when the planet was placed
     const hostile = r <= 2;
     const type = hostile ? 'hostile' : 'friendly';
 

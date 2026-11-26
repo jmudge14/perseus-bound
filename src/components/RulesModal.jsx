@@ -126,7 +126,7 @@ export default function RulesModal({ onClose, difficulty = 'standard' }) {
     <h3>Challenge mode</h3>
     <p>
       Start with 6 Fuel and 6 Hull, with limits of 10 Fuel, 10 Air, 6 Food, 6 Hull and 6 Power. Planets are one value
-      lower on contact. Travelling 2 squares costs 1 Power, and 3 squares costs 3 Power.
+      lower: each new planet's die is lowered by 1 as it's placed (a 1 stays a 1). Travelling 2 squares costs 1 Power, and 3 squares costs 3 Power.
     </p>
 
 

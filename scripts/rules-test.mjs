@@ -87,9 +87,18 @@ const withRandom = (seq, fn) => { const orig = Math.random; let i = 0; Math.rand
 { const s = base(); s.planets = [{ id: 90, x: 3, y: 3, type: 'unknown', value: 6 }]; s.phase = 'contact';
   const n = withRandom([5], () => act(s, { type: 'CONTACT' }));
   check('Friendly contact keeps the die value', n.planets[0].type === 'friendly' && n.planets[0].value === 6 && n.phase === 'trade'); }
-{ const s = base('challenge'); s.planets = [{ id: 90, x: 3, y: 3, type: 'unknown', value: 6 }]; s.phase = 'contact';
+{ const s = base('challenge'); s.planets = [{ id: 90, x: 3, y: 3, type: 'unknown', value: 5 }]; s.phase = 'contact';
   const n = withRandom([5], () => act(s, { type: 'CONTACT' }));
-  check('Challenge: contacted planet is one value lower', n.planets[0].value === 5); }
+  check('Challenge: contact keeps the (already lowered) value', n.planets[0].value === 5); }
+{ let bad = 0, ones = 0, n = 0;
+  for (let k = 0; k < 200; k++) { const g = newGame('challenge');
+    for (const r of [...g.rolls, ...g.pending].filter((x) => x.label === 'Planet')) {
+      const die = r.dice.find((d) => d.kind === 'yellow').v; const shown = Number(/value (\d)/.exec(r.result[0].text)[1]);
+      n++; if (shown !== Math.max(1, die - 1)) bad++; if (die === 1 && shown === 1) ones++; } }
+  check('Challenge: planets are placed one value lower (1 stays 1)', bad === 0 && n > 0 && ones > 0, `${n} planets, ${bad} wrong`); }
+{ let bad = 0; for (let k = 0; k < 200; k++) { const g = newGame('standard'); for (const r of [...g.rolls, ...g.pending].filter((x) => x.label === 'Planet')) {
+    const die = r.dice.find((d) => d.kind === 'yellow').v; if (!r.result[0].text.endsWith(`value ${die}`)) bad++; } }
+  check('Standard: planets keep the rolled value', bad === 0); }
 { const s = base(); s.planets = [{ id: 90, x: 3, y: 3, type: 'hostile', value: 3 }]; s.phase = 'scan';
   const n = withRandom(Array.from({ length: 40 }, () => 1 + Math.floor(Math.random() * 6)), () => act(s, { type: 'SKIP_SCAN' }));
   check('Landing on a known hostile planet spawns an enemy and reduces it', n.enemies.length === 1 && n.planets[0].value === 2); }

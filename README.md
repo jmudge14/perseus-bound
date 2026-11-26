@@ -167,11 +167,15 @@ designer (2026-11-25). The engine follows them, and `scripts/rules-test.mjs` che
 - **Hull repair:** 2 Ti → +2 Hull. The rulebook takes precedence over the Turn Reference.
 - **"Must land on planet if possible in 3":** outdated and not a rule; enemy movement now handles this.
 - **Enemy movement:** the Turn Reference takes precedence: black die = horizontal, white die = vertical.
-  All enemies move horizontally first, then vertically, closest enemy first.
+  All enemies move horizontally first, then vertically. The rulebook deliberately doesn't set an order between
+  enemies (it isn't worth tracking at the table); the game moves the closest enemy first.
 - **Fleeing:** a successful flee always costs exactly 3 Fuel to move 3 squares (no Power cost). It still
   follows normal movement: it stops at planets, enemies and the map edge, charges solar power on a planet,
   and can lead to another battle. A failed flee deals the 2D6 difference as damage, with no shields.
-- **Hull at 0:** you survive at exactly 0, but any further Hull damage destroys you.
+- **Hull at 0:** you survive at exactly 0, but any further Hull damage destroys you. (The rulebook's Hull
+  description says "if your hull is breached"; the battle rules give the exact threshold.)
+- **Challenge planet values:** each new planet's die is lowered by 1 as it's placed (1 stays 1), as with the
+  physical dice, so the board always shows the real value.
 - **Ransom debt:** a battle ransom you can't pay costs 2 Debt, or 4 Debt for Uranium (deliberate: carrying
   Uranium is risky). Borrowing is always 2 Debt per Element, since Uranium can't be borrowed.
 - **Scanning:** every yellow die in the pool is placed; occupied coordinates are re-rolled per "Rolling
@@ -179,9 +183,9 @@ designer (2026-11-25). The engine follows them, and `scripts/rules-test.mjs` che
 
 Implementation choices (not rulebook questions):
 
-- Challenge mode lowers a planet's value by 1 when it is contacted.
 - A maintenance operation or engine repair ends the turn (one operation per turn).
-- You need at least 3 Fuel to attempt to flee.
-- Small guard rails: Uranium can't be offered in the Uranium trade, "+2 resource" loot is disabled for a
-  full resource, and borrowing is limited by the remaining supply of that Element.
+- You need at least 3 Fuel to attempt to flee (implied by the rules, since a successful flee costs 3 Fuel).
+- Small guard rails: Uranium can't be offered in the Uranium trade (allowed by the rules, but never useful),
+  "+2 resource" loot is disabled for a full resource, and borrowing (like everything else) is limited by what's
+  left in the supply.
 - Two-player modes are not implemented yet (they're marked TBD in the rulebook).
