@@ -1,0 +1,26 @@
+{
+  "name": "perseus-bound",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Perseus Bound - a single-player resource management survival board game, as a single-page React app.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "node scripts/smoke-test.mjs && node scripts/rules-test.mjs",
+    "preview": "vite preview",
+    "test:rules": "node scripts/rules-test.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.0",
+    "vite-plugin-singlefile": "^2.0.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

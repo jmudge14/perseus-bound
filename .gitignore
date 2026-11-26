@@ -1,0 +1,45 @@
+# Dependencies (restored by `npm ci` from package-lock.json)
+node_modules/
+
+# Build output (rebuilt by build.ps1 / build.sh). Delete this line to keep the published
+# dist/perseus-bound.html under version control.
+dist/
+
+# Vite caches and temporary config bundles
+.vite/
+node_modules/.vite/
+vite.config.*.timestamp-*
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test and coverage output
+coverage/
+test-results/
+playwright-report/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Editors and IDEs
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating systems
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
