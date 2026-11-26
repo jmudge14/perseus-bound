@@ -349,6 +349,9 @@ export function decodeState(code) {
  * post via <iframe>, the post can pass its own address as ?shareBase=… so links open
  * the post instead of the bare game file (see README).
  */
+/** Where the game is published. Share links made from a copy opened from disk point here. */
+export const PUBLIC_URL = 'https://mudge.dev/apps/perseus-bound.html';
+
 export function shareBaseUrl() {
   try {
     const base = new URLSearchParams(window.location.search).get('shareBase');
@@ -362,6 +365,9 @@ export function shareBaseUrl() {
   } catch {
     /* fall through */
   }
+  // A copy opened straight from disk (file://) would make links nobody else can open, so point those at the
+  // public site instead. Anywhere else (the public site, another host, a local dev server) uses its own address.
+  if (window.location.protocol === 'file:') return PUBLIC_URL;
   return window.location.href.split('#')[0];
 }
 

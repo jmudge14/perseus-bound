@@ -19,8 +19,9 @@ src/game/score.js           High-score formula for won games
 src/game/highscores.js      Personal best scores (this browser)
 src/components/ShareModal.jsx   The Share dialog (copy / shorten)
 src/components/CreditsModal.jsx The Credits dialog (author, Claude note, source link, open-source licenses)
-src/content/credits.js      Credits details: author, GitHub link (placeholder: set GITHUB_URL), bundled licenses
+src/content/credits.js      Credits details: author, GitHub link, bundled licenses
 src/content/rulebook.md     The full rulebook shown in the Rules panel's "Full rulebook" tab
+src/game/buildInfo.js       Version / build date / commit, filled in at build time
 src/game/shorten.js         Link shortening (is.gd via JSONP, no key; swap services here)
 src/components/Board.jsx    6×6 star map with planets, ships and reachable squares
 src/components/Pieces.jsx   Dice, ship tokens, element cubes
@@ -64,13 +65,34 @@ Other commands:
 ```
 npm run dev      # local dev server with hot reload while editing
 npm test         # smoke test (10 random games) + rules test; `node scripts/smoke-test.mjs 500` for more
-npm run test:rules  # rules test only: 34 scenarios checking specific rulebook rules
+npm run test:rules  # rules test only: 44 checks checking specific rulebook rules
 ```
 
-## Putting it on a blog
+## Publishing
 
-Upload `dist/perseus-bound.html` and either link to it directly or
-embed it in a post. To embed it so that **share links open your blog post** (not the bare game file), use:
+The game is published at **https://mudge.dev/apps/perseus-bound.html**. To update it, upload
+`dist/perseus-bound.html` to `/apps/` on the site, replacing the old file.
+
+That address appears in three places; change all three if the game ever moves:
+- `PUBLIC_URL` in `src/game/share.js`: share links made from a copy opened straight from disk (`file://`)
+  point here, since a `file://` link can't be opened by anyone else. The published page, another host or a
+  local dev server uses its own address.
+- The `canonical` and `og:url` tags in `index.html` (used by search engines and link previews).
+- The examples in this README.
+
+### Version and last-updated date
+
+The title screen shows `v<version> · updated <date>`, and the Credits page shows the full build time. Both are
+filled in automatically on every build (see `define` in `vite.config.js`):
+- **Version** is `"version"` in `package.json`. Bump it there when you publish a new release.
+- **Last updated** is the time the build ran.
+- **Commit** (Credits page only) is the short git commit hash, with `+` if there were uncommitted changes. It's
+  left out if the build isn't run inside a git repository with at least one commit. When `GITHUB_URL` is set and
+  there were no uncommitted changes, it links to that commit on GitHub (the link works once the commit is pushed).
+
+### Embedding in a blog post (optional)
+
+To embed the game in a post so that **share links open the post** (not the game page), use:
 
 ```html
 <iframe id="perseus-bound" title="Perseus Bound" allow="clipboard-write"
@@ -78,12 +100,12 @@ embed it in a post. To embed it so that **share links open your blog post** (not
 <script>
   // Tell the game which page share links should point to, and pass any incoming share code through.
   var pb = document.getElementById('perseus-bound');
-  pb.src = '/games/perseus-bound.html?shareBase=' +
+  pb.src = 'https://mudge.dev/apps/perseus-bound.html?shareBase=' +
            encodeURIComponent(location.href.split('#')[0]) + location.hash;
 </script>
 ```
 
-`allow="clipboard-write"` lets the Share button copy from inside the iframe. Without it, the link is still shown
+`allow="clipboard-write"` lets the Share dialog copy from inside the iframe. Without it, the link is still shown
 for players to copy by hand.
 
 Games auto-save in the browser (localStorage), so players can close the tab and resume.
@@ -93,7 +115,7 @@ Games auto-save in the browser (localStorage), so players can close the tab and 
 The 🔗 Share button creates a link that lets someone else continue the current game from the same point:
 
 ```
-https://your-blog/post#s=1.<payload>.<checksum>
+https://mudge.dev/apps/perseus-bound.html#s=1.<payload>.<checksum>
 ```
 
 - `1` is the **share version** (`SHARE_VERSION` in `src/game/share.js`). It is checked before anything else
@@ -102,7 +124,7 @@ https://your-blog/post#s=1.<payload>.<checksum>
   change in a way that would make an old link load incorrectly.
 - `<payload>` is the game state, packed into a compact array, then JSON (UTF-8), then base64url. It includes
   the full board position, this turn's step status (shown in the turn tracker), and the last 5 turns of the
-  Captain's Log (at most 80 entries). The dice tray isn't included. Links are typically 0.5–2 KB.
+  Captain's Log (at most 80 entries). The dice tray isn't included. Links are typically 2.5–4 KB, under is.gd's 5,000-character limit for Shorten.
 - `<checksum>` is an FNV-1a hash of `version.payload`. It catches truncated or mistyped links. It does not stop
   someone from deliberately editing a link.
 

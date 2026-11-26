@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { AUTHOR, GITHUB_URL, BUNDLED, BUILD_TOOLS } from '../content/credits.js';
+import { APP_VERSION, BUILD_COMMIT, buildTimeText } from '../game/buildInfo.js';
 
 const Ext = ({ href, children }) => (
   <a href={href} target="_blank" rel="noopener noreferrer">
@@ -41,6 +42,25 @@ export default function CreditsModal({ onClose }) {
         <p>
           <span className="pb-credits-tri" aria-hidden="true" /> Graphics marked with a small red triangle in the corner
           are interim AI-generated placeholders, made by Claude. They will be replaced with human-made artwork.
+        </p>
+
+        <h3>Version</h3>
+        <p>
+          Version {APP_VERSION}
+          {buildTimeText() && <>, last updated {buildTimeText()}</>}
+          {BUILD_COMMIT && (
+            <span className="pb-dim">
+              {' '}
+              (commit{' '}
+              {GITHUB_URL && !BUILD_COMMIT.endsWith('+') ? (
+                <Ext href={`${GITHUB_URL}/commit/${BUILD_COMMIT}`}>{BUILD_COMMIT}</Ext>
+              ) : (
+                BUILD_COMMIT
+              )}
+              )
+            </span>
+          )}
+          .
         </p>
 
         <h3>Source code</h3>

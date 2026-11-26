@@ -13,9 +13,8 @@ export const AUTHOR = {
   label: 'mudge.dev',
 };
 
-// PLACEHOLDER: set this to the project's GitHub URL once the repository is public,
-// e.g. 'https://github.com/<user>/perseus-bound'. While it's empty the Credits page says "coming soon".
-export const GITHUB_URL = '';
+// The project's source code. If this is set to '', the Credits page says "coming soon" instead.
+export const GITHUB_URL = 'https://github.com/jmudge14/perseus-bound';
 
 // Open-source packages whose code is bundled into the game file. Their licenses require the notice to be
 // shipped with the game, so the full license text is shown. The text and version are read from

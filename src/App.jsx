@@ -9,6 +9,7 @@ import { backgroundArt } from './assets/index.js';
 import RulesModal from './components/RulesModal.jsx';
 import ShareModal from './components/ShareModal.jsx';
 import CreditsModal from './components/CreditsModal.jsx';
+import { versionLine, buildTimeText, BUILD_COMMIT } from './game/buildInfo.js';
 import TurnTracker from './components/TurnTracker.jsx';
 import { readShareFromLocation, clearShareFromLocation } from './game/share.js';
 import { scoreGame, formatScore, SCORE_WEIGHTS } from './game/score.js';
@@ -353,14 +354,17 @@ function TitleScreen({ saved, incoming, onAcceptShared, onDismissShared, onStart
       <p className="pb-titlescreen-foot">
         <CreditsLink onClick={onCredits} />
       </p>
+      <p className="pb-version" title={buildTimeText() ? `Built ${buildTimeText()}${BUILD_COMMIT ? ` (commit ${BUILD_COMMIT})` : ''}` : undefined}>
+        {versionLine()}
+      </p>
     </div>
   );
 }
 
-/** Small, low-key link to the Credits page. */
+/** Small button that opens the Credits page. */
 function CreditsLink({ onClick }) {
   return (
-    <button type="button" className="pb-creditslink" onClick={onClick}>
+    <button type="button" className="pb-btn pb-btn-sm pb-creditslink" onClick={onClick}>
       Credits
     </button>
   );
